@@ -12,7 +12,7 @@ export default createGlobalStyle`
     body {
         font-family: 'Work Sans', sans-serif;
         background-color: ${colors.primaryDarkColor};
-        color: ${colors.primaryColor}
+        color: ${colors.primaryDarkColor}
     }
     html, body, #root {
         height: 100%;
@@ -25,6 +25,10 @@ export default createGlobalStyle`
         padding: 10px 20px;
         border-radius: 5px;
         font-weight: 700;
+        transition: all 1s;
+        &:hover {
+            filter: brightness(65%);
+        }
     }
     a {
         text-decoration: none;
