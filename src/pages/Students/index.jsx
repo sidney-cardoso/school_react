@@ -33,12 +33,12 @@ function Students() {
                         </ProfilePicture>
                         <span>{student.name}</span>
                         <span>{student.email}</span>
-                        <a href={`/student/${student.id}/edit`}>
+                        <Link to={`/student/${student.id}/edit`}>
                             <FaEdit size={16} />
-                        </a>
-                        <a href={`/student/${student.id}/delete`}>
+                        </Link>
+                        <Link to={`/student/${student.id}/delete`}>
                             <FaWindowClose size={16} />
-                        </a>
+                        </Link>
                     </div>
                 ))}
             </StudentContainer>
