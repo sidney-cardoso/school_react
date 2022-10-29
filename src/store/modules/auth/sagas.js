@@ -3,9 +3,34 @@ import { toast } from "react-toastify";
 
 import * as actions from "./actions";
 import * as types from "../types";
+import axios from "../../../services/axios";
+import history from "../../../services/history";
+import { get } from "lodash";
 
 function* loginRequest({ payload }) {
-  console.log("SAGA", payload);
+  try {
+    const response = yield call(axios.post, "/tokens", payload);
+    yield put(actions.loginSuccess({ ...response.data }));
+
+    toast.success("Login realizado com sucesso");
+
+    axios.defaults.headers.Authorization = `Bearer ${response.data.token}`;
+
+    history.push(payload.prevPath);
+  } catch (error) {
+    toast.error("E-mail ou senha inválidos");
+
+    yield put(actions.loginFailure());
+  }
 }
 
-export default all([takeLatest(types.LOGIN_REQUEST, loginRequest)]);
+const persistRehydrate = ({ payload }) => {
+  const token = get(payload, "auth.token", "");
+  if (!token) return;
+  axios.defaults.headers.Authorization = `Bearer ${token}`;
+};
+
+export default all([
+  takeLatest(types.LOGIN_REQUEST, loginRequest),
+  takeLatest(types.PERSIST_REHYDRATE, persistRehydrate),
+]);
