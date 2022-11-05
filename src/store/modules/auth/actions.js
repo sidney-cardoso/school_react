@@ -20,3 +20,10 @@ export const loginFailure = (payload) => {
     payload,
   };
 };
+
+export const registerRequest = (payload) => {
+  return {
+    type: types.REGISTER_REQUEST,
+    payload,
+  };
+};

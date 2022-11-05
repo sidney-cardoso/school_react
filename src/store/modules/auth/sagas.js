@@ -29,8 +29,13 @@ const persistRehydrate = ({ payload }) => {
   if (!token) return;
   axios.defaults.headers.Authorization = `Bearer ${token}`;
 };
+const registerRequest = ({payload}) => {
+  const {id, name, email, password} = payload
+  console.log("incompleto!");
+}
 
 export default all([
   takeLatest(types.LOGIN_REQUEST, loginRequest),
   takeLatest(types.PERSIST_REHYDRATE, persistRehydrate),
+  takeLatest(types.REGISTER_REQUEST, registerRequest),
 ]);
