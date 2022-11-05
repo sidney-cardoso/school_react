@@ -5,21 +5,29 @@ import { FaUserCircle, FaEdit, FaWindowClose } from 'react-icons/fa'
 
 import { Container } from "../../styles/global";
 import { ProfilePicture, StudentContainer } from "./styled";
-
 import axios from '../../services/axios'
+
+import Loading from "../../components/Loading";
 
 function Students() {
     const [students, setStudents] = useState([])
+    const [isLoading, setIsLoading] = useState(false)
+
     useEffect(() => {
         const getData = async () => {
+            setIsLoading(true)
             const response = await axios.get('/students')
             setStudents(response.data)
+            setIsLoading(false)
         }
         getData()
     }, [])
-    
+
     return (
         <Container>
+
+            <Loading isLoading={isLoading} />
+
             <h1>Alunos</h1>
             <StudentContainer>
                 {students.map(student => (
