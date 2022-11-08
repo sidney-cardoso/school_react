@@ -9,9 +9,13 @@ import { toast } from "react-toastify";
 import Loading from '../../components/Loading'
 import axios from "../../services/axios";
 import history from "../../services/history";
+import * as actions from '../../store/modules/auth/actions'
+import { useDispatch } from "react-redux";
 
 
 export default function Student({ match }) {
+    const dispatch = useDispatch()
+
     const id = get(match, 'params.id', 0)
     const [name, setName] = useState('')
     const [surname, setSurname] = useState('')
@@ -52,7 +56,7 @@ export default function Student({ match }) {
         getData()
     }, [id])
 
-    const handleSubmit = e => {
+    const handleSubmit = async e => {
         e.preventDefault()
 
         let formErrors = false
@@ -80,6 +84,49 @@ export default function Student({ match }) {
         if (!isFloat(String(height))) {
             toast.error('Altura inválida!')
             formErrors = true
+        }
+        if (formErrors) return
+
+        try {
+            setIsLoading(true)
+            if (id) {
+                await axios.put(`/students/${id}`, {
+                    name,
+                    surname,
+                    email,
+                    age,
+                    height,
+                    weight
+                })
+                toast.success('Aluno(a) editado(a) com sucesso!')
+                history.push('/')
+            } else {
+                const { data } = await axios.post(`/students`, {
+                    name,
+                    surname,
+                    email,
+                    age,
+                    height,
+                    weight
+                })
+                toast.success('Aluno(a) criado(a) com sucesso!')
+                history.push(`/student/${data.id}/edit`)
+
+            }
+            setIsLoading(false)
+
+        } catch (err) {
+            const status = get(err, 'response.status', 0)
+            const data = get(err, 'response.data', {})
+            const errors = get(data, 'errors', [])
+
+            if (errors.length > 0) {
+                errors.map(error => toast.error(error))
+            } else {
+                toast.error('Erro desconhecido')
+            }
+
+            if (status === 401) dispatch(actions.loginFailure())
         }
     }
 
