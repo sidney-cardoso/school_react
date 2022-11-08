@@ -29,9 +29,46 @@ const persistRehydrate = ({ payload }) => {
   if (!token) return;
   axios.defaults.headers.Authorization = `Bearer ${token}`;
 };
-const registerRequest = ({payload}) => {
+function* registerRequest ({payload}){
   const {id, name, email, password} = payload
-  console.log("incompleto!");
+
+  try {
+    if(id) {
+      yield call(axios.put, '/users', {
+        email,
+        name,
+        password: password || undefined
+      })
+      toast.success('Usuário editado com sucesso!')
+      yield put(actions.registerUpdatedSuccess({ name, email, password }))
+    } else {
+      yield call(axios.post, '/users', {
+        email,
+        name,
+        password
+      })
+      toast.success('Cadastro realizado com sucesso!')
+      yield put(actions.registerCreatedSuccess({ name, email, password }))
+      history.push('/login')
+    }
+  } catch (error) {
+    const errors = get(error, 'response.data.errors', [])
+    const status = get(error, 'response.status', 0)
+
+    if (status == 401) {
+      toast.error('Faça login com seus dados atualizados!')
+      yield put(actions.loginFailure())
+      return history.push('/login')
+    }
+
+    if(errors.length > 0) {
+      errors.map(err => toast.error(err))
+    } else {
+      toast.error("Erro desconhecido")
+    }
+
+    yield put(actions.registerFailure())
+  }
 }
 
 export default all([
