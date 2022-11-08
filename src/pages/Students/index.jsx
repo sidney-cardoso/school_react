@@ -4,7 +4,7 @@ import { get } from 'lodash'
 import { FaUserCircle, FaEdit, FaWindowClose, FaExclamation } from 'react-icons/fa'
 
 import { Container } from "../../styles/global";
-import { ProfilePicture, StudentContainer } from "./styled";
+import { ProfilePicture, StudentContainer, NewStudent } from "./styled";
 import axios from '../../services/axios'
 
 import Loading from "../../components/Loading";
@@ -52,7 +52,11 @@ function Students() {
     return (
         <Container>
             <Loading isLoading={isLoading} />
+
             <h1>Alunos</h1>
+
+            <NewStudent to="/student/">Criar novo aluno</NewStudent>
+
             <StudentContainer>
                 {students.map((student, index) => (
                     <div key={String(student.id)}>
