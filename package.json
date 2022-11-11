@@ -2,7 +2,8 @@
   "name": "school",
   "author": "Sidney",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "homepage": "https://school.sidneycardoso.tech",
   "type": "module",
   "scripts": {
     "dev": "vite",
